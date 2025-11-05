@@ -134,6 +134,8 @@ graph TD
     I --> I1[SenhaValidator.java]
     I --> I2[ProblemaValidator.java]
     I --> I3[EmailValidator.java]
+    I --> I4[UsuarioValidator.java]
+    I --> I5[SpringContextHelper.java]
 ```
 
 <details>
@@ -178,6 +180,7 @@ src/main/java/geosense/Geosense/
 │   ├── UsuarioService.java
 │   ├── MotoService.java
 │   ├── PatioService.java
+│   ├── ValidacaoOracleService.java
 │   └── ...
 ├── 🔒 security/               # Configurações de segurança
 │   ├── CustomUserDetails.java
@@ -185,7 +188,9 @@ src/main/java/geosense/Geosense/
 │   └── PasswordEncoderConfig.java
 └── ✅ validation/             # Validadores customizados
     ├── SenhaValidator.java
-    ├── ProblemaValidator.java
+    ├── EmailValidator.java
+    ├── UsuarioValidator.java
+    ├── SpringContextHelper.java
     └── ...
 ```
 
@@ -344,6 +349,25 @@ erDiagram
 | Spring Security integrado | Validação completa de dados |    Por tipo de usuário    |   Timeout automático   |
 
 </div>
+
+### ✅ Validação de Senha e Email (Oracle)
+
+O sistema utiliza a função Oracle `FN_VALIDAR_SENHA_E_LIMITES` para validação completa de senha e email. Esta função valida:
+
+- **Senha**:
+  - Mínimo 6 e máximo 20 caracteres
+  - Deve conter pelo menos uma letra maiúscula
+  - Deve conter pelo menos uma letra minúscula
+  - Deve conter pelo menos um número
+  - Não pode conter espaços
+- **Email**:
+  - Formato válido (exemplo@dominio.com)
+  - Máximo 255 caracteres
+  - Verificação de duplicidade (na operação INSERT)
+- **Tipo de Usuário**:
+  - Deve ser um dos tipos válidos: MECANICO, ADMINISTRADOR, OPERADOR
+
+**Mensagens de erro padronizadas**: Todos os erros de validação são exibidos em formato visual consistente (caixa vermelha com ícone triangular) no frontend.
 
 ### 👥 Gestão de Usuários
 
@@ -560,7 +584,7 @@ pause > nul
 
 ---
 
-## 🚀 Deploy 
+## 🚀 Deploy
 
 ### ☁️ Deploy no Render
 
@@ -593,14 +617,14 @@ SPRING_JPA_SHOW_SQL=false
 
 <div align="center">
 
-| Aspecto     | 💻 Local                | 🌍 Produção                               |
-| ----------- | ----------------------- | ----------------------------------------- |
+| Aspecto     | 💻 Local                | 🌍 Produção                                  |
+| ----------- | ----------------------- | -------------------------------------------- |
 | **URL**     | `http://localhost:8081` | `https://geosense-sprint3-t1e8.onrender.com` |
-| **Banco**   | Oracle Local/Cloud      | Oracle Cloud                              |
-| **Porta**   | 8081                    | 10000 (Render)                            |
-| **Profile** | `default`               | `production`                              |
-| **SSL**     | ❌ HTTP                 | ✅ HTTPS                                  |
-| **Domain**  | localhost               | onrender.com                              |
+| **Banco**   | Oracle Local/Cloud      | Oracle Cloud                                 |
+| **Porta**   | 8081                    | 10000 (Render)                               |
+| **Profile** | `default`               | `production`                                 |
+| **SSL**     | ❌ HTTP                 | ✅ HTTPS                                     |
+| **Domain**  | localhost               | onrender.com                                 |
 
 </div>
 
@@ -759,6 +783,29 @@ FlywayException: Validate failed
 
 **Solução**: Execute `mvn flyway:repair` ou limpe o banco.
 
+#### 4. Erro ao Criar Função Oracle
+
+```
+ORA-01031: insufficient privileges
+```
+
+**Solução**: Verifique se o usuário tem permissão `CREATE FUNCTION`. Execute:
+
+```sql
+GRANT CREATE FUNCTION TO SEU_USUARIO;
+```
+
+#### 5. Erros de Validação Não Aparecem
+
+Se os erros de validação não aparecem no formato padronizado:
+
+**Solução**:
+
+- Verifique se a função Oracle `FN_VALIDAR_SENHA_E_LIMITES` foi criada corretamente
+- Verifique os logs da aplicação para erros de conexão com o banco
+- Certifique-se de que a migration `V16` foi executada com sucesso
+- Verifique se o usuário do banco tem permissões adequadas
+
 ### Logs de Debug
 
 ```properties
@@ -802,6 +849,33 @@ logging.level.org.hibernate.SQL=DEBUG
 - `V2__constraints_and_indexes.sql` - Constraints e índices
 - `V3__seed_data.sql` - Dados iniciais
 - `V15__fix_existing_alocacao_data.sql` - Correções de dados
+- `V16__create_function_validar_senha_limites.sql` - Função Oracle de validação de senha e email
+
+#### Funções Oracle
+
+##### `FN_VALIDAR_SENHA_E_LIMITES`
+
+Função que valida senha, email e tipo de usuário conforme regras de negócio:
+
+**Parâmetros:**
+
+- `p_senha VARCHAR2` - Senha a ser validada
+- `p_email VARCHAR2` - Email a ser validado
+- `p_tipo_usuario VARCHAR2` - Tipo de usuário (MECANICO, ADMINISTRADOR, OPERADOR)
+- `p_operacao VARCHAR2` - Operação (VALIDACAO ou INSERT)
+
+**Retorno:**
+
+- JSON com status da validação, mensagens e lista de erros (se houver)
+
+**Exceções tratadas:**
+
+- `VALUE_ERROR` - Erro de valor nos parâmetros
+- `NO_DATA_FOUND` - Dados não encontrados
+- `TOO_MANY_ROWS` - Múltiplos registros
+- `OTHERS` - Erros genéricos
+
+**Nota**: A função é criada automaticamente pela migration `V16__create_function_validar_senha_limites.sql` quando a aplicação é executada pela primeira vez.
 
 ---
 
