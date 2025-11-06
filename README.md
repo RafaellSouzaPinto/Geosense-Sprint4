@@ -676,32 +676,281 @@ SPRING_JPA_SHOW_SQL=false
 
 ## 🧪 Testes
 
-### Estrutura de Testes
+### 📊 Visão Geral
+
+O projeto GeoSense possui uma **suita completa de testes unitários** utilizando **JUnit 5** e **Mockito**, garantindo a qualidade e confiabilidade do código. Os testes cobrem **Controllers**, **Services** e **Entities**, validando tanto cenários de sucesso quanto casos de erro.
+
+<div align="center">
+
+|  📦 **Categoria**  | 📝 **Classes de Teste** | ✅ **Casos de Teste** | 🎯 **Cobertura**  |
+| :----------------: | :---------------------: | :-------------------: | :---------------: |
+| 🎮 **Controllers** |        2 classes        |       15 casos        |   Rotas e views   |
+|  ⚙️ **Services**   |        2 classes        |       20 casos        | Lógica de negócio |
+|  🗃️ **Entities**   |        1 classe         |       11 casos        |  Validações JPA   |
+| 🚀 **Application** |        1 classe         |        1 caso         |  Contexto Spring  |
+|     **TOTAL**      |      **6 classes**      |     **47 casos**      |     **Alta**      |
+
+</div>
+
+### 📁 Estrutura de Testes
 
 ```
 src/test/java/geosense/Geosense/
-└── GeosenseApplicationTests.java
+├── 🎮 controller/
+│   ├── HomeControllerTest.java          # 5 casos de teste
+│   └── MotoControllerTest.java          # 10 casos de teste
+├── ⚙️ service/
+│   ├── MotoServiceTest.java             # 10 casos de teste
+│   └── PatioServiceTest.java            # 10 casos de teste
+├── 🗃️ entity/
+│   └── MotoEntityTest.java              # 11 casos de teste
+└── 🚀 GeosenseApplicationTests.java      # 1 caso de teste
 ```
 
-### Execução de Testes
+### 🎮 Testes de Controllers
+
+#### `HomeControllerTest` - Testes do Controlador Principal
+
+**Tecnologias**: JUnit 5, Mockito, Spring MVC
+
+**Casos de Teste (5)**:
+
+1. ✅ **Deve retornar view index na rota raiz** - Valida rota `/`
+2. ✅ **Deve retornar view login na rota /login** - Valida rota de autenticação
+3. ✅ **Deve retornar view admin com contadores corretos** - Valida dashboard administrativo
+4. ✅ **Deve retornar contadores zerados quando não há dados** - Valida comportamento com banco vazio
+5. ✅ **Deve retornar contadores com valores grandes** - Valida escalabilidade dos contadores
+
+**Dependências Mockadas**:
+
+- `UsuarioRepository`
+- `PatioRepository`
+- `MotoRepository`
+- `AlocacaoMotoRepository`
+- `Model` (Spring MVC)
+
+#### `MotoControllerTest` - Testes do Controlador de Motos
+
+**Tecnologias**: JUnit 5, Mockito, Spring MVC, Bean Validation
+
+**Casos de Teste (10)**:
+
+1. ✅ **Deve retornar view de listagem de motos** - Valida listagem de motos
+2. ✅ **Deve retornar formulário de criação de moto** - Valida formulário de cadastro
+3. ✅ **Deve criar moto com sucesso quando dados são válidos** - Valida criação com dados corretos
+4. ✅ **Deve retornar formulário quando há erros de validação** - Valida tratamento de erros
+5. ✅ **Deve lançar exceção quando vaga não está disponível** - Valida regra de negócio de vagas
+6. ✅ **Deve retornar formulário de edição** - Valida formulário de atualização
+7. ✅ **Deve atualizar moto com sucesso** - Valida atualização de dados
+8. ✅ **Deve excluir moto com sucesso** - Valida remoção de motos
+9. ✅ **Deve rejeitar criação quando placa e chassi estão vazios** - Valida regra de negócio obrigatória
+10. ✅ **Deve criar moto sem vaga quando vagaId é null** - Valida criação opcional de vaga
+
+**Dependências Mockadas**:
+
+- `MotoRepository`
+- `VagaRepository`
+- `PatioService`
+- `AlocacaoMotoRepository`
+- `Model`, `BindingResult`, `RedirectAttributes` (Spring MVC)
+
+### ⚙️ Testes de Services
+
+#### `MotoServiceTest` - Testes do Serviço de Motos
+
+**Tecnologias**: JUnit 5, Mockito
+
+**Casos de Teste (10)**:
+
+1. ✅ **Deve registrar moto com sucesso quando dados são válidos** - Valida registro completo
+2. ✅ **Deve lançar exceção quando placa e chassi estão vazios** - Valida regra obrigatória
+3. ✅ **Deve registrar moto apenas com placa (sem chassi)** - Valida flexibilidade de identificação
+4. ✅ **Deve registrar moto apenas com chassi (sem placa)** - Valida alternativa de identificação
+5. ✅ **Deve lançar exceção quando problema identificado é inválido** - Valida enum de problemas
+6. ✅ **Deve registrar moto com vaga associada** - Valida associação com vagas
+7. ✅ **Deve listar todas as motos** - Valida listagem completa
+8. ✅ **Deve remover moto por ID** - Valida remoção
+9. ✅ **Deve aceitar problema identificado como null** - Valida campo opcional
+10. ✅ **Deve lançar exceção quando vaga não existe** - Valida integridade referencial
+
+**Dependências Mockadas**:
+
+- `MotoRepository`
+- `VagaRepository`
+
+#### `PatioServiceTest` - Testes do Serviço de Pátios
+
+**Tecnologias**: JUnit 5, Mockito
+
+**Casos de Teste (10)**:
+
+1. ✅ **Deve criar pátio com sucesso e gerar vagas** - Valida criação e geração automática
+2. ✅ **Deve buscar pátio por ID** - Valida busca por identificador
+3. ✅ **Deve retornar Optional vazio quando pátio não existe** - Valida tratamento de não encontrado
+4. ✅ **Deve listar todos os pátios** - Valida listagem completa
+5. ✅ **Deve atualizar pátio com sucesso** - Valida atualização de dados
+6. ✅ **Deve lançar exceção ao atualizar pátio inexistente** - Valida integridade
+7. ✅ **Deve aumentar capacidade do pátio** - Valida expansão de capacidade
+8. ✅ **Deve lançar exceção ao reduzir capacidade com vagas ocupadas** - Valida regra de negócio
+9. ✅ **Deve deletar pátio com sucesso** - Valida remoção
+10. ✅ **Deve lançar exceção ao deletar pátio inexistente** - Valida tratamento de erros
+
+**Dependências Mockadas**:
+
+- `PatioRepository`
+- `VagaRepository`
+- `MotoRepository`
+
+### 🗃️ Testes de Entities
+
+#### `MotoEntityTest` - Testes da Entidade Moto
+
+**Tecnologias**: JUnit 5, Jakarta Bean Validation
+
+**Casos de Teste (11)**:
+
+1. ✅ **Deve criar moto válida** - Valida criação com dados corretos
+2. ✅ **Deve falhar validação quando modelo é null** - Valida campo obrigatório
+3. ✅ **Deve falhar validação quando modelo está vazio** - Valida constraint `@NotBlank`
+4. ✅ **Deve falhar validação quando modelo excede tamanho máximo** - Valida constraint `@Size`
+5. ✅ **Deve aceitar placa nula (opcional)** - Valida campo opcional
+6. ✅ **Deve aceitar chassi nulo (opcional)** - Valida campo opcional
+7. ✅ **Deve configurar e recuperar vaga corretamente** - Valida relacionamento JPA
+8. ✅ **Deve aceitar problema identificado como null** - Valida campo opcional
+9. ✅ **Deve configurar e recuperar defeitos corretamente** - Valida relacionamento `@OneToMany`
+10. ✅ **Deve configurar e recuperar histórico de alocações** - Valida relacionamento `@OneToMany`
+11. ✅ **Deve usar construtor completo corretamente** - Valida construtor com todos os parâmetros
+
+**Validações Testadas**:
+
+- `@NotBlank` no campo `modelo`
+- `@Size(max = 50)` no campo `modelo`
+- Campos opcionais (`placa`, `chassi`, `problemaIdentificado`)
+- Relacionamentos JPA (`@ManyToOne`, `@OneToMany`)
+
+### 🚀 Testes de Aplicação
+
+#### `GeosenseApplicationTests` - Teste de Contexto Spring
+
+**Tecnologias**: JUnit 5, Spring Boot Test
+
+**Casos de Teste (1)**:
+
+1. ✅ **contextLoads** - Valida que o contexto Spring Boot carrega corretamente
+
+Este teste garante que todas as configurações, beans e dependências do Spring Boot estão corretamente configuradas.
+
+### 🛠️ Execução de Testes
+
+#### Executar Todos os Testes
 
 ```bash
 # Executar todos os testes
 mvn test
 
-# Executar testes com relatório
-mvn test jacoco:report
+# Executar com output detalhado
+mvn test -X
 
-# Executar testes específicos
-mvn test -Dtest=NomeDoTeste
+# Executar ignorando falhas (útil para ver todos os resultados)
+mvn test -Dmaven.test.failure.ignore=true
 ```
 
-### Cobertura de Testes
+#### Executar Testes Específicos
 
-- **Testes Unitários**: Validação de lógica de negócio
-- **Testes de Integração**: Validação de endpoints
-- **Testes de Segurança**: Validação de autenticação
-- **Testes de Interface**: Validação de templates
+```bash
+# Executar uma classe de teste específica
+mvn test -Dtest=HomeControllerTest
+
+# Executar um método de teste específico
+mvn test -Dtest=HomeControllerTest#deveRetornarViewIndex
+
+# Executar múltiplas classes
+mvn test -Dtest=HomeControllerTest,MotoControllerTest
+
+# Executar todos os testes de um pacote
+mvn test -Dtest=geosense.Geosense.controller.*
+```
+
+#### Executar com Relatório de Cobertura
+
+```bash
+# Gerar relatório de cobertura (requer JaCoCo configurado)
+mvn test jacoco:report
+
+# Visualizar relatório (abre no navegador)
+# Arquivo gerado em: target/site/jacoco/index.html
+```
+
+#### Executar Testes em Modo Debug
+
+```bash
+# Executar com logs detalhados
+mvn test -Dtest=*Test -Dmaven.surefire.debug
+
+# Executar com breakpoints (configurar IDE)
+# IntelliJ: Run → Debug 'Tests'
+# Eclipse: Run As → Debug Configurations → JUnit
+```
+
+### 📈 Cobertura de Testes
+
+#### Tipos de Cobertura
+
+<div align="center">
+
+|        🎯 **Tipo**        |                📝 **Descrição**                |     ✅ **Status**     |
+| :-----------------------: | :--------------------------------------------: | :-------------------: |
+|   **Testes Unitários**    |     Validação de lógica de negócio isolada     |    ✅ Implementado    |
+| **Testes de Controllers** |     Validação de rotas, views e fluxo MVC      |    ✅ Implementado    |
+|  **Testes de Services**   |  Validação de regras de negócio e integrações  |    ✅ Implementado    |
+|  **Testes de Entities**   | Validação de constraints e relacionamentos JPA |    ✅ Implementado    |
+| **Testes de Integração**  |        Validação de endpoints completos        | 🔄 Em desenvolvimento |
+|  **Testes de Segurança**  |    Validação de autenticação e autorização     | 🔄 Em desenvolvimento |
+
+</div>
+
+#### Estatísticas de Cobertura
+
+- **Controllers**: ✅ 2 classes testadas (HomeController, MotoController)
+- **Services**: ✅ 2 classes testadas (MotoService, PatioService)
+- **Entities**: ✅ 1 classe testada (Moto)
+- **Total de Casos**: ✅ **47 casos de teste** implementados
+- **Padrão de Teste**: ✅ **AAA Pattern** (Arrange, Act, Assert)
+- **Mocking**: ✅ **Mockito** para isolamento de dependências
+
+### 🎯 Boas Práticas Implementadas
+
+✅ **Nomenclatura Descritiva**: Métodos de teste seguem padrão `deve[Comportamento]Quando[Condicao]`  
+✅ **DisplayName**: Todos os testes possuem `@DisplayName` descritivo  
+✅ **Isolamento**: Uso de mocks para garantir testes independentes  
+✅ **Validação Completa**: Testes cobrem cenários de sucesso e erro  
+✅ **Assertions Claras**: Uso de assertions específicas do JUnit 5  
+✅ **Setup Centralizado**: Uso de `@BeforeEach` para configuração comum
+
+### 📚 Dependências de Teste
+
+```xml
+<!-- JUnit 5 -->
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<!-- Mockito -->
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-junit-jupiter</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<!-- Spring Boot Test -->
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+</dependency>
+```
 
 ---
 
