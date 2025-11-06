@@ -137,6 +137,26 @@
         font-size: 14px;
       }
 
+      .user-info-clickable {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .user-info-clickable:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      .user-info-clickable i {
+        font-size: 20px;
+        color: var(--primary-cyan);
+      }
+
       .logout-btn {
         background: rgba(239, 68, 68, 0.1);
         border: 1px solid rgba(239, 68, 68, 0.3);
@@ -152,6 +172,234 @@
         background: rgba(239, 68, 68, 0.2);
         color: white;
         text-decoration: none;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .modal-overlay.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-content {
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        position: relative;
+        animation: slideUp 0.3s ease;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .modal-header h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .modal-header h2 i {
+        color: var(--primary-cyan);
+      }
+
+      .modal-close {
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-close:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 12px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-cyan);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 0 3px rgba(0, 204, 207, 0.1);
+      }
+
+      .form-group input::placeholder {
+        color: rgba(148, 163, 184, 0.5);
+      }
+
+      .form-group small {
+        display: block;
+        margin-top: 5px;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .btn-primary {
+        flex: 1;
+        background: linear-gradient(
+          135deg,
+          var(--primary-cyan) 0%,
+          #0891b2 100%
+        );
+        color: white;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 204, 207, 0.4);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-secondary {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border-color);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .alert {
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .alert-success {
+        background: rgba(16, 185, 129, 0.2);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #86efac;
+      }
+
+      .alert-error {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #fca5a5;
       }
 
       /* Main Content */
@@ -570,8 +818,10 @@
           <div class="logo-text">Geosense</div>
         </div>
         <div class="user-info" sec:authorize="isAuthenticated()">
-          <i class="fas fa-user-circle"></i>
-          <span sec:authentication="name"></span>
+          <div class="user-info-clickable" id="userProfileBtn">
+            <i class="fas fa-user-circle"></i>
+            <span id="userNameDisplay">Carregando...</span>
+          </div>
           <a th:href="@{/logout}" class="logout-btn">
             <i class="fas fa-sign-out-alt"></i> Sair
           </a>
@@ -640,6 +890,71 @@
       </div>
     </main>
 
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>
+            <i class="fas fa-user-edit"></i>
+            Editar Perfil
+          </h2>
+          <button class="modal-close" id="closeModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="nome"> <i class="fas fa-user"></i> Nome </label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              required
+              placeholder="Seu nome completo"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email"> <i class="fas fa-envelope"></i> Email </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="seu@email.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="senha"> <i class="fas fa-lock"></i> Nova Senha </label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Deixe em branco para não alterar"
+            />
+            <small
+              >Mínimo 6 caracteres. Deixe em branco se não quiser
+              alterar.</small
+            >
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" id="cancelBtn">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary" id="saveBtn">
+              <i class="fas fa-save"></i> Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Bottom Navigation (mobile only) -->
     <nav class="bottom-nav">
       <div class="nav-container">
@@ -671,7 +986,184 @@
       document.addEventListener("DOMContentLoaded", function () {
         loadDashboardData();
         loadLatestMotorcycles();
+        loadUserName();
+        initProfileModal();
       });
+
+      // Load user name in header
+      async function loadUserName() {
+        try {
+          const response = await fetch("/api/profile");
+          if (response.ok) {
+            const profile = await response.json();
+            updateUserNameDisplay(profile.nome);
+          } else {
+            updateUserNameDisplay("Usuário");
+          }
+        } catch (error) {
+          console.error("Erro ao carregar nome do usuário:", error);
+          updateUserNameDisplay("Usuário");
+        }
+      }
+
+      function updateUserNameDisplay(nome) {
+        const userNameSpan = document.getElementById("userNameDisplay");
+        if (userNameSpan && nome) {
+          userNameSpan.textContent = nome;
+        }
+      }
+
+      // Profile Modal Functions
+      function initProfileModal() {
+        const profileBtn = document.getElementById("userProfileBtn");
+        const modal = document.getElementById("profileModal");
+        const closeBtn = document.getElementById("closeModal");
+        const cancelBtn = document.getElementById("cancelBtn");
+        const form = document.getElementById("profileForm");
+
+        if (profileBtn) {
+          profileBtn.addEventListener("click", async () => {
+            await loadUserProfile();
+            modal.classList.add("active");
+          });
+        }
+
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            modal.classList.remove("active");
+            hideAlerts();
+          });
+        }
+
+        if (cancelBtn) {
+          cancelBtn.addEventListener("click", () => {
+            modal.classList.remove("active");
+            hideAlerts();
+          });
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) {
+            modal.classList.remove("active");
+            hideAlerts();
+          }
+        });
+
+        // Handle form submission
+        if (form) {
+          form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            await saveUserProfile();
+          });
+        }
+      }
+
+      async function loadUserProfile() {
+        try {
+          const response = await fetch("/api/profile");
+          if (!response.ok) {
+            throw new Error("Erro ao carregar perfil");
+          }
+
+          const profile = await response.json();
+          document.getElementById("nome").value = profile.nome || "";
+          document.getElementById("email").value = profile.email || "";
+          document.getElementById("senha").value = "";
+        } catch (error) {
+          showError("Erro ao carregar dados do perfil: " + error.message);
+        }
+      }
+
+      async function saveUserProfile() {
+        const saveBtn = document.getElementById("saveBtn");
+        const nome = document.getElementById("nome").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const senha = document.getElementById("senha").value;
+
+        // Validate
+        if (!nome || !email) {
+          showError("Nome e email são obrigatórios");
+          return;
+        }
+
+        // Disable button
+        saveBtn.disabled = true;
+        saveBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+        hideAlerts();
+
+        try {
+          const data = {
+            nome: nome,
+            email: email,
+          };
+
+          // Only include senha if provided
+          if (senha && senha.trim() !== "") {
+            data.senha = senha;
+          }
+
+          const response = await fetch("/api/profile", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            const errorMsg =
+              result.error ||
+              result.message ||
+              Object.values(result).join(", ") ||
+              "Erro ao salvar perfil";
+            throw new Error(errorMsg);
+          }
+
+          showSuccess(result.message || "Perfil atualizado com sucesso!");
+
+          // Update user name in header
+          if (result.usuario) {
+            updateUserNameDisplay(result.usuario.nome);
+          }
+
+          // Clear password field
+          document.getElementById("senha").value = "";
+
+          // Close modal after 2 seconds
+          setTimeout(() => {
+            document.getElementById("profileModal").classList.remove("active");
+            hideAlerts();
+          }, 2000);
+        } catch (error) {
+          showError(error.message);
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<i class="fas fa-save"></i> Salvar Alterações';
+        }
+      }
+
+      function showSuccess(message) {
+        const alert = document.getElementById("successAlert");
+        alert.textContent = message;
+        alert.classList.add("show");
+        document.getElementById("errorAlert").classList.remove("show");
+      }
+
+      function showError(message) {
+        const alert = document.getElementById("errorAlert");
+        alert.textContent = message;
+        alert.classList.add("show");
+        document.getElementById("successAlert").classList.remove("show");
+      }
+
+      function hideAlerts() {
+        document.getElementById("successAlert").classList.remove("show");
+        document.getElementById("errorAlert").classList.remove("show");
+      }
 
       async function loadDashboardData() {
         try {
