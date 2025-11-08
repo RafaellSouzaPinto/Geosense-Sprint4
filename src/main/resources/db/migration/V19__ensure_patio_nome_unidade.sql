@@ -1,0 +1,19 @@
+-- V19: Garantir coluna NOME_UNIDADE na tabela PATIO
+
+DECLARE
+    v_existe NUMBER := 0;
+BEGIN
+    SELECT COUNT(*)
+      INTO v_existe
+      FROM USER_TAB_COLUMNS
+     WHERE TABLE_NAME = 'PATIO'
+       AND COLUMN_NAME = 'NOME_UNIDADE';
+
+    IF v_existe = 0 THEN
+        EXECUTE IMMEDIATE 'ALTER TABLE PATIO ADD (NOME_UNIDADE VARCHAR2(255))';
+    END IF;
+END;
+/
+
+SELECT 'Coluna NOME_UNIDADE garantida na tabela PATIO.' AS STATUS FROM DUAL;
+
