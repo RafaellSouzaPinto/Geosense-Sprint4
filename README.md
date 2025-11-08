@@ -1099,6 +1099,7 @@ logging.level.org.hibernate.SQL=DEBUG
 - `V3__seed_data.sql` - Dados iniciais
 - `V15__fix_existing_alocacao_data.sql` - Correções de dados
 - `V16__create_function_validar_senha_limites.sql` - Função Oracle de validação de senha e email
+- `V18__ensure_usuario_finalizacao_column.sql` - Garante coluna e índices de finalização das alocações
 
 #### Funções Oracle
 
