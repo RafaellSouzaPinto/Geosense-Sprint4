@@ -146,7 +146,7 @@ class MotoServiceTest {
         motoSalva.setPlaca(null);
         motoSalva.setChassi("CHASSI987654321");
 
-        when(motoRepository.save(any(Moto.class))).thenReturn(motoSalva)
+        when(motoRepository.save(any(Moto.class))).thenReturn(motoSalva);
 
         MotoDTO resultado = motoService.registrar(dtoComChassi);
 
